@@ -42,15 +42,13 @@ function App() {
     }
   }
 
-  const [sw, setSw] = useState(new SessionWallet("TestNet", permPopupCallback))
+  const [sw, setSw] = useState(new SessionWallet("SandNet", permPopupCallback))
   const [addrs, setAddrs] = useState(sw.accountList())
   const [connected, setConnected] = useState(sw.connected())
 
 
   async function connect(choice: string){
-
-
-    const w = new SessionWallet("TestNet", permPopupCallback, choice)
+    const w = new SessionWallet("SandNet", permPopupCallback, choice)
 
     if(!await w.connect()) return alert("Couldnt connect")
 
