@@ -1,0 +1,17 @@
+:root {
+  --accent: gray;
+}
+
+button {
+  margin: 10px;
+}
+
+.actions {
+  display: flex;
+  margin: 5vh;
+  justify-content: space-evenly;
+}
+
+.acct-list {
+  list-style-type: none;
+}
