@@ -39,7 +39,7 @@ async function requestTransaction() {
 			'Content-Type': 'application/json'
 		}
 	}
-	const get_txns_response = await fetch('/get_txns', options);
+	const get_txns_response = await fetch('/get_demo3', options);
   const json_response1 = await get_txns_response.json();
 
 	if (json_response1['success']) {
@@ -55,7 +55,7 @@ async function requestTransaction() {
 				'Content-Type': 'application/json'
 			}
 		}
-		const send_txns_response = await fetch('/send_signed_txns', signed_data);
+		const send_txns_response = await fetch('/submit', signed_data);
 		const json_response2 = await send_txns_response.json();
 
 		if (json_response2['success']) {
