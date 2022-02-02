@@ -6,6 +6,14 @@ button {
   margin: 10px;
 }
 
+.wallet-option {
+  width: 150px;
+}
+
+.wallet-option img {
+  width: 100%;
+}
+
 .actions {
   display: flex;
   margin: 5vh;

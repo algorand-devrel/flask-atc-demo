@@ -3,52 +3,15 @@ import { PermissionResult, SessionWallet, SignedTxn, allowedWallets} from 'algor
 import algosdk from 'algosdk';
 
 
-const pprops = {
-	isOpen: false,
-	result: (s: string): void => {}
-
-}
-
 function App() {
 	
-  const [popupProps, setPopupProps] = useState(pprops)
-
-  const permPopupCallback = {
-  	async request(pr: PermissionResult): Promise<SignedTxn[]> {
-	    // set a local var that will be modified in the popup
-	    let result = ""
-	    function setResult(res: string){ result = res}
-
-  	    setPopupProps({ isOpen:true, result: setResult })		
-	    
-	    // Wait for it to finish
-
-	    const timeout = async(ms: number) => new Promise(res => setTimeout(res, ms));
-	    async function wait(): Promise<SignedTxn[]> {
-		    while(result === "") await timeout(50);
-
-		    if(result === "approve") return pr.approved()
-		    return pr.declined()
-	    }
-
-	    //get signed
-	    const txns = await wait()
-
-	    //close popup
-	    setPopupProps(pprops)
-
-	    //return signed
-	    return txns
-    }
-  }
-
-  const [sw, setSw] = useState(new SessionWallet("SandNet", permPopupCallback))
+  const [sw, setSw] = useState(new SessionWallet("SandNet", undefined))
   const [addrs, setAddrs] = useState(sw.accountList())
   const [connected, setConnected] = useState(sw.connected())
 
 
   async function connect(choice: string){
-    const w = new SessionWallet("SandNet", permPopupCallback, choice)
+    const w = new SessionWallet("SandNet", undefined, choice)
 
     if(!await w.connect()) return alert("Couldnt connect")
 
@@ -82,7 +45,7 @@ function App() {
   const options = []
   if(!connected){
     for (const [k,v] of Object.entries(allowedWallets)){
-      options.push((<button key={k} onClick={()=>{connect(k)}}><img src={v.img(false)} alt='branding'></img>{v.displayName()}</button>))
+      options.push((<button key={k} className='wallet-option' onClick={()=>{connect(k)}}><img src={v.img(false)} alt='branding'></img>{v.displayName()}</button>))
     }
   }else{
     options.push(<button key='disco' onClick={disconnect}>Sign out</button>)
@@ -93,10 +56,12 @@ function App() {
 
   return (
     <div id='app' className="App">
+      <h4>Accounts: </h4>
+      <ul className='acct-list'> {accts} </ul>
+      <h4>Options: </h4>
       <div className='actions'>
         {options}
       </div>
-      <ul className='acct-list'> {accts} </ul>
     </div>
   );
 }
