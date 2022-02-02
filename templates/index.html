@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>ATC Demo</title>
+		<script
+			src="https://unpkg.com/algosdk@1.13.1/dist/browser/algosdk.min.js"
+	 		integrity="sha384-0BSEzBpLxqFWYBI+sOGhv3W91/wPf+jFwCiuXNrC52XZav2qb3Rz+pfq3AFI0CrL"
+			crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename='demo.js') }}"></script>
+	</head>
+	<body>
+		<h1>ATC Demo</h1>
+		<form>
+			<label for="sender">Sender</label>
+			<input type="text" name="sender" id="sender" value="" size=58 />
+			<button id="request_transaction">Request</button>
+		</form>
+		<p></p>
+	</body>
+</html>
