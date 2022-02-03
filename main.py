@@ -164,8 +164,6 @@ def demo2():
     if not is_valid_address(data['sender']):
         return {'success': False, 'message': "Sender address invalid."}
 
-    asset_id = 17
-
     with open("static/abi.json") as f:
         js= f.read()
 
