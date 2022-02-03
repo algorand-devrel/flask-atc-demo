@@ -19,3 +19,5 @@ yarn-error.log*
 
 __pycache__/
 .venv/
+
+demo_contract.json

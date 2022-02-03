@@ -79,7 +79,7 @@ export async function constructApplicationCallComposer(
 export async function getPaymentTxnFromServer(
   sender: string, receiver: string, amount: number
 ): Promise<algosdk.Transaction[]> {
-  const response = await window.fetch("/get_demo1", {
+  const response = await window.fetch("/get_payment", {
     method: "POST",
     body: JSON.stringify({ sender, receiver, amount }),
   });
@@ -88,19 +88,18 @@ export async function getPaymentTxnFromServer(
   return parseTransactions(data);
 }
 
-export async function triggerApplicationCreate(gh: string): Promise<number> {
+export async function triggerApplicationCreate(): Promise<number> {
   const response = await window.fetch("/deploy_app", { 
     method: "POST", 
-    body: JSON.stringify({gh})
   });
-  const { data } = await response.json();
+  const data  = await response.json();
   return data['AppID']
 }
 
 export async function getApplicationCallFromServer(
   appId: number, sender: string
 ): Promise<algosdk.Transaction[]> {
-  const response = await window.fetch("/get_demo2", {
+  const response = await window.fetch("/get_application_call", {
     method: "POST",
     body: JSON.stringify({ sender, appId }),
   });
@@ -138,7 +137,7 @@ function parseTransactions(payload: ServerTxn[]): algosdk.Transaction[] {
 }
 
 async function getContractAPI(): Promise<algosdk.ABIContract> {
-  const resp = await fetch("/static/abi.json");
+  const resp = await fetch("/static/demo_contract.json");
   return new algosdk.ABIContract(await resp.json());
 }
 

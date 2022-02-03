@@ -91,7 +91,7 @@ function Demo(props: DemoProps) {
 
   async function doApplicationCreate() {
     if(serverSide){
-      //setAppId(await triggerApplicationCreate())
+      setAppId(await triggerApplicationCreate())
       return
     }
 
