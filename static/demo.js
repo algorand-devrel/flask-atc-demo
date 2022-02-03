@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const btnDeploy = document.getElementById('deploy_app');
 	btnDeploy.addEventListener('click', (e) => {
 		e.preventDefault();
-		deployerApp();
+		deployApp();
 	});
 
 	const btnFundAlgo = document.getElementById('fund_algo')

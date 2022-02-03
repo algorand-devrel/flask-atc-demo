@@ -1,19 +1,24 @@
 {
-	"name": "Flask Demo",
-	"desc": "A demo of the Atomic Transaction Composer (ATC) and Flask.",
-	"networks": {
-		"3eaaT1N53+o6+zJfxMF2Nk5TnWVNre6BRF5hFy+ef8U=": { "appID": 2 }
-	},
-	"methods": [
-		{
-			"name": "demo",
-			"desc": "A demo call using the ABI.",
-			"args": [
-				{
-					"type": "pay"
-				}
-			],
-			"returns": { "type": "bool", "desc": "Return value of demo call." }
-		}
-	]
+    "name": "Flask Demo",
+    "desc": "A demo of the Atomic Transaction Composer (ATC) and Flask.",
+    "networks": {
+        "3eaaT1N53+o6+zJfxMF2Nk5TnWVNre6BRF5hFy+ef8U=": {
+            "appID": 13
+        }
+    },
+    "methods": [
+        {
+            "name": "demo",
+            "desc": "A demo call using the ABI.",
+            "args": [
+                {
+                    "type": "pay"
+                }
+            ],
+            "returns": {
+                "type": "bool",
+                "desc": "Return value of demo call."
+            }
+        }
+    ]
 }
