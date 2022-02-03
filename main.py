@@ -93,7 +93,15 @@ def deploy_app():
 
     txid = algod_client.send_transaction(deploy_stxn)
     res = wait_for_confirmation(algod_client, txid)
+    genesis_hash = sp.gh
     app_id = res['application-index']
+
+    # Update the appID in the ABI.json file.
+    with open('static/abi.json') as json_file:
+        abi = json.load(json_file)
+    abi['networks'][genesis_hash]['appID'] = app_id
+    with open('static/abi.json', 'w') as json_file:
+        json.dump(abi, json_file, indent=4)
 
     return {'success': True, 'AppID': app_id}
 
