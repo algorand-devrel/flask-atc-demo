@@ -55,6 +55,14 @@ def get_method(c: Contract, name: str):
             return m
     raise Exception("No method with the name {}".format(name))
 
+def update_appid(app_id: int, genesis_hash: str):
+    # Update the appID in the ABI.json file.
+    with open('static/abi.json') as json_file:
+        abi = json.load(json_file)
+    abi['networks'][genesis_hash]['appID'] = app_id
+    with open('static/abi.json', 'w') as json_file:
+        json.dump(abi, json_file, indent=4)
+
 # Index
 @app.route('/')
 def root():
@@ -96,12 +104,7 @@ def deploy_app():
     genesis_hash = sp.gh
     app_id = res['application-index']
 
-    # Update the appID in the ABI.json file.
-    with open('static/abi.json') as json_file:
-        abi = json.load(json_file)
-    abi['networks'][genesis_hash]['appID'] = app_id
-    with open('static/abi.json', 'w') as json_file:
-        json.dump(abi, json_file, indent=4)
+    update_appid(app_id, genesis_hash)
 
     return {'success': True, 'AppID': app_id}
 
@@ -159,23 +162,24 @@ def demo1():
 # Demo 2: Payment + Asset Transfer + Application Call
 @app.route("/get_demo2", methods=['POST'])
 def demo2():
-    # Verify they sent us the data we need.
-    data = json.loads(request.data)
-    if not is_valid_address(data['sender']):
-        return {'success': False, 'message': "Sender address invalid."}
-
-    asset_id = 17
+    sp = algod_client.suggested_params()
+    sp.flat_fee = True
+    sp.fee = 1_000
 
     with open("static/abi.json") as f:
         js= f.read()
 
     contract = Contract.from_json(js)
 
-    app_id = contract.networks["3eaaT1N53+o6+zJfxMF2Nk5TnWVNre6BRF5hFy+ef8U="].app_id
-
-    sp = algod_client.suggested_params()
-    sp.flat_fee = True
-    sp.fee = 1_000
+    # Verify they sent us the data we need.
+    data = json.loads(request.data)
+    if not is_valid_address(data['sender']):
+        return {'success': False, 'message': "Sender address invalid."}
+    if 'appID' in data and 'genesisHash' in data:
+        update_appid(data['appID'], data['genesisHash'])
+        app_id = data['appID']
+    else:
+        app_id = contract.networks[sp.gh].app_id
 
     atc = AtomicTransactionComposer()
     ats = AccountTransactionSigner(None)
