@@ -1,0 +1,38 @@
+#pragma version 6
+
+txn ApplicationID
+bz handle_setup
+
+txn OnCompletion
+int UpdateApplication
+==
+txn OnCompletion
+int DeleteApplication
+==
+||
+bnz handle_update_or_delete
+
+txn ApplicationArgs 0
+method "demo(pay)bool"
+==
+bnz method_demo
+
+err
+
+handle_setup:
+	int 1
+	return
+
+handle_update_or_delete:
+	txn Sender
+	global CreatorAddress
+	==
+	return
+
+method_demo:
+	byte 0x151f7c7580
+	log
+
+	int 1
+	return
+

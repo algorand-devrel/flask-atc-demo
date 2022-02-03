@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		e.preventDefault();
 		requestTransaction();
 	})
+
+	const btnDeploy = document.getElementById('deploy');
+	btnDeploy.addEventListener('click', deployApp);
+
+	const btnFundAlgo = document.getElementById('fund_algo')
+	btnFundAlgo.addEventListener('click', (e) => {
+		e.preventDefault();
+		fundAlgo();
+	});
 });
 
 document.addEventListener('load', function() {
@@ -15,7 +24,7 @@ document.addEventListener('load', function() {
 		AlgoSigner.accounts({ledger: 'SandNet'}).then((accs) => {
 			console.log(3);
 			console.log(accs);
-			document.getElementById('sender').value = accounts[0].address;
+			document.getElementById('address').value = accounts[0].address;
 		})
 	})
 });
@@ -23,12 +32,27 @@ document.addEventListener('load', function() {
 (async function() {
 	await AlgoSigner.connect();
 	const accounts = await AlgoSigner.accounts({ledger: 'SandNet'});
-	document.getElementById('sender').value = accounts[0].address;
+	document.getElementById('address').value = accounts[0].address;
 })();
+
+async function deployApp() {
+	await fetch('/deploy_app', {method: 'POST'})
+}
+
+async function fundAlgo() {
+	const options = {
+		method: 'POST',
+		body: JSON.stringify({'receiver': document.getElementById('address').value}),
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}
+	await fetch('/fund_algo', options);
+}
 
 async function requestTransaction() {
 	// Using the data from the form, request new transactions.
-	const sender = document.getElementById('sender').value;
+	const sender = document.getElementById('address').value;
 	const data = {
 		'sender': sender,
 	}
@@ -39,7 +63,7 @@ async function requestTransaction() {
 			'Content-Type': 'application/json'
 		}
 	}
-	const get_txns_response = await fetch('/get_demo3', options);
+	const get_txns_response = await fetch('/get_demo2', options);
   const json_response1 = await get_txns_response.json();
 
 	if (json_response1['success']) {
