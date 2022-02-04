@@ -1,0 +1,25 @@
+:root {
+  --accent: gray;
+}
+
+button {
+  margin: 10px;
+}
+
+.wallet-option {
+  width: 150px;
+}
+
+.wallet-option img {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  margin: 5vh;
+  justify-content: space-evenly;
+}
+
+.acct-list {
+  list-style-type: none;
+}

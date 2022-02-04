@@ -132,7 +132,7 @@ def fund_algo():
     return {'success': True, 'message': "10 Algo sent."}
 
 # Demo 1: Send Payment
-@app.route("/get_demo1", methods=['POST'])
+@app.route("/get_payment", methods=['POST'])
 def demo1():
     # Verify they sent us the data we need.
     data = json.loads(request.data)
@@ -160,7 +160,7 @@ def demo1():
     return {'success': True, 'data': txgroup}
 
 # Demo 2: Payment + Asset Transfer + Application Call
-@app.route("/get_demo2", methods=['POST'])
+@app.route("/get_application_call", methods=['POST'])
 def demo2():
     # Verify they sent us the data we need.
     data = json.loads(request.data)
