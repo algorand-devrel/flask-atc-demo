@@ -64,7 +64,7 @@ async function demo1() {
 			'Content-Type': 'application/json'
 		}
 	}
-	const get_txns_response = await fetch('/get_demo1', options);
+	const get_txns_response = await fetch('/get_payment', options);
   const json_response1 = await get_txns_response.json();
 
 	if (json_response1['success']) {
@@ -105,7 +105,7 @@ async function demo2() {
 			'Content-Type': 'application/json'
 		}
 	}
-	const get_txns_response = await fetch('/get_demo2', options);
+	const get_txns_response = await fetch('/get_application_call', options);
   const json_response1 = await get_txns_response.json();
 
 	if (json_response1['success']) {
