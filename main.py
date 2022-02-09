@@ -131,7 +131,12 @@ def fund_algo():
 
     return {'success': True, 'message': "10 Algo sent."}
 
+###############################
+# Atomic Transaction Composer #
+###############################
+
 # Demo 1: Send Payment
+# Create a Payment Transaction and add it to the ATC with an ATS.
 @app.route("/get_payment", methods=['POST'])
 def demo1():
     # Verify they sent us the data we need.
@@ -143,16 +148,22 @@ def demo1():
     if not isinstance(data['amount'], int):
         return {'success': False, 'message': "Amount not valid."}
 
+    # Fetch and set the suggested parameters.
     sp = algod_client.suggested_params()
     sp.flat_fee = True
     sp.fee = 1_000
 
+    # Create an ATC object, an ATS object (with no defined sender), then add
+    # your Payment Transaction into the ATC object.
     atc = AtomicTransactionComposer()
     ats = AccountTransactionSigner(None)
     ptxn = PaymentTxn(data['sender'], sp, data['receiver'], data['amount'])
     tws = TransactionWithSigner(ptxn, ats)
     atc.add_transaction(tws)
 
+    # We need to return a group of transactions in a format that the frontend
+    # can interpret as a set of unsigned transactions to sign. We can use
+    # `atc.build_group()` for this process.
     txgroup = []
     for tx in atc.build_group():
         txgroup.append({'txn': msgpack_encode(tx.txn)})
@@ -167,25 +178,33 @@ def demo2():
     if not is_valid_address(data['sender']):
         return {'success': False, 'message': "Sender address invalid."}
 
+    # Fetch and set the suggested parameters.
     sp = algod_client.suggested_params()
     sp.flat_fee = True
     sp.fee = 1_000
 
+    # Read the Contract ABI JSON file.
     with open("static/demo_contract.json") as f:
         js = f.read()
 
+    # Create a Contract object from the ABI description.
     contract = Contract.from_json(js)
     app_id = contract.networks[sp.gh].app_id
 
+    # Create an ATC object and an ATS object (with no defined sender)
     atc = AtomicTransactionComposer()
     ats = AccountTransactionSigner(None)
 
+    # Create two transactions, a Payment transacation and an Application Call.
     ptxn = PaymentTxn(data['sender'], sp, data['sender'], 1)
     aptxn = ApplicationCallTxn(data['sender'], sp, app_id, OnComplete.NoOpOC)
 
+    # Pair the transactions with the signer.
     ptws = TransactionWithSigner(ptxn, ats)
     aptws = TransactionWithSigner(aptxn, ats)
 
+    # Add a method call to the application transaction, including the payment
+    # transaction as a method argument.
     atc.add_method_call(
         app_id,
         get_method(contract, "demo"),
@@ -195,6 +214,9 @@ def demo2():
         method_args=[ptws]
     )
 
+    # We need to return a group of transactions in a format that the frontend
+    # can interpret as a set of unsigned transactions to sign. We can use
+    # `atc.build_group()` for this process.
     txgroup = []
     for tx in atc.build_group():
         txgroup.append({'txn': msgpack_encode(tx.txn)})
