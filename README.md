@@ -46,6 +46,8 @@ Within the `frontend` folder you can use node to run a React frontend. This demo
 ```sh
 cd frontend
 npm install
+# Any version over 16 requires the openssl legacy flag.
+export NODE_OPTIONS=--openssl-legacy-provider
 node start
 ```
 
